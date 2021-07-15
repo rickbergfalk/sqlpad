@@ -47,6 +47,17 @@ const renderValue = (input: any, column: StatementColumn) => {
       </a>
     );
   } else {
+    // Format Markdown hyperlinks
+    if (typeof input === 'string') {
+      const mdMatch = input.match('^\\[(.*)\\]\\((https?://.*)\\)$');
+      if (mdMatch) {
+        return (
+          <a target="_blank" rel="noopener noreferrer" href={mdMatch[2]}>
+            {mdMatch[1]}
+          </a>
+        );
+      }
+    }
     return input;
   }
 };
@@ -462,7 +473,7 @@ class QueryResultDataTable extends React.PureComponent<
                 position: 'absolute',
               }}
             >
-              {/* 
+              {/*
                 Visual hack - On Windows, scrollbar always showing in grid takes up some amount of room on side of content.
                 To account for this, the header width is reduced by scrollbar width.
                 This creates a small space in upper right corner that is unstyled.
@@ -508,9 +519,9 @@ class QueryResultDataTable extends React.PureComponent<
                 {this.Cell}
               </VariableSizeGrid>
 
-              {/* 
-                This menu is hidden and moves around based on where context-menu click happens 
-                This is hacky but works! reach-ui does not expose the menu components 
+              {/*
+                This menu is hidden and moves around based on where context-menu click happens
+                This is hacky but works! reach-ui does not expose the menu components
                 in a way that allows them to be used for context menu
               */}
               <Menu>
